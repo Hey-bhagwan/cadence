@@ -2,13 +2,7 @@
 'use client'
 
 import { deleteTask, updateTaskStatus, chunkAndSaveTask } from "@/app/actions";
-
-interface Task {
-    id: number;
-    title: string;
-    is_completed: boolean;
-    parent_id: number | null; // Add parent_id
-}
+import { Task } from '../types'
 
 export default function TaskItem({ task }: { task: Task }) {
     // We don't want the AI button on subtasks

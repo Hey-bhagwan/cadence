@@ -1,13 +1,6 @@
 // components/TaskList.tsx
 import TaskItem from './TaskItem'
-
-interface Task {
-    id: number;
-    title: string;
-    is_completed: boolean;
-    due_date: string | null;
-    parent_id: number | null;
-}
+import { Task } from '../types'
 
 export default function TaskList({ tasks }: { tasks: Task[] }) {
     // Filter for parent tasks (tasks without a parent_id)

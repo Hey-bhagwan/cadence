@@ -4,14 +4,7 @@
 import { useState } from 'react'
 import TaskList from './TaskList' // We will create this next
 import CalendarView from './CalendarView'
-
-// Define the shape of our task from Supabase
-interface Task {
-    id: number;
-    title: string;
-    is_completed: boolean;
-    due_date: string | null;
-}
+import { Task } from '../types'
 
 export default function ViewToggle({ tasks }: { tasks: Task[] }) {
     const [view, setView] = useState('list') // 'list' or 'calendar'

@@ -8,6 +8,7 @@ import {startOfWeek} from 'date-fns/startOfWeek'
 import {getDay} from 'date-fns/getDay'
 import {enUS} from 'date-fns/locale/en-US'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+import { Task } from '../types'
 
 // Setup for the calendar's date handling
 const locales = {
@@ -21,19 +22,12 @@ const localizer = dateFnsLocalizer({
   locales,
 })
 
-// Define the shape of our task from Supabase
-interface Task {
-  id: number;
-  title: string;
-  due_date: string | null; // a string like '2025-09-20'
-}
-
 interface CalendarEvent {
   title: string;
   start: Date;
   end: Date;
   allDay: boolean;
-  resource: any;
+  resource: number;
 }
 
 export default function CalendarView({ tasks }: { tasks: Task[] }) {
