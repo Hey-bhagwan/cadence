@@ -3,9 +3,9 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import AddTaskForm from '../components/AddTaskForm'
-import TaskItem from '../components/TaskItem'
+import ViewToggle from '../components/ViewToggle' // Import the new toggle
 
-export const dynamic = 'force-dynamic' // Ensures the page is always fresh
+export const dynamic = 'force-dynamic'
 
 export default async function Dashboard() {
   const supabase = createServerComponentClient({ cookies })
@@ -24,11 +24,7 @@ export default async function Dashboard() {
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Your Tasks</h1>
       <AddTaskForm />
-      <div className="space-y-4">
-          {tasks?.map((task) => (
-              <TaskItem key={task.id} task={task} />
-          ))}
-      </div>
+      <ViewToggle tasks={tasks || []} />
     </div>
   )
 }
