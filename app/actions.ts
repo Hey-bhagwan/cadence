@@ -26,7 +26,15 @@ export async function deleteTask(id: number) {
 
 export async function updateTaskStatus(id: number, is_completed: boolean) {
     const supabase = createServerComponentClient({ cookies })
-    await supabase.from('tasks').update({ is_completed }).match({ id })
+    
+    // If the task is being marked as complete, set the completed_at timestamp.
+    // If it's being marked as incomplete, set it back to null.
+    const updates = {
+        is_completed,
+        completed_at: is_completed ? new Date().toISOString() : null
+    };
+
+    await supabase.from('tasks').update(updates).match({ id })
     revalidatePath('/dashboard')
 }
 
