@@ -2,12 +2,20 @@
 'use client'
 
 import { deleteTask, updateTaskStatus, chunkAndSaveTask } from "@/app/actions";
-import { Task } from '../types'
+import { Task } from "../types";
+
+// Helper object to map categories to colors
+const categoryColors: { [key: string]: string } = {
+    'Work': 'bg-blue-100 text-blue-800',
+    'Learning': 'bg-green-100 text-green-800',
+    'Personal': 'bg-yellow-100 text-yellow-800',
+    'Fitness': 'bg-red-100 text-red-800',
+    'Other': 'bg-gray-100 text-gray-800',
+};
 
 export default function TaskItem({ task }: { task: Task }) {
-    // We don't want the AI button on subtasks
     const isSubtask = task.parent_id !== null;
-    // Helper to format the date nicely
+
     const formattedDate = task.due_date 
       ? new Date(task.due_date + 'T00:00:00').toLocaleDateString('en-US', { 
           month: 'short', 
@@ -17,14 +25,29 @@ export default function TaskItem({ task }: { task: Task }) {
 
     return (
         <div className="flex items-center justify-between p-4 bg-white border rounded-lg">
-            <span className={`${task.is_completed ? 'line-through text-gray-500' : ''}`}>
-                {task.title}
-            </span>
-            {formattedDate && (
-                    <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
-                        {formattedDate}
-                    </span>
+            <div className="flex items-center gap-3">
+                {/* --- ADD SUBTASK INDICATOR --- */}
+                {isSubtask && <span className="text-gray-400">↳</span>}
+                {/* --------------------------- */}
+                <span className={`${task.is_completed ? 'line-through text-gray-500' : ''}`}>
+                    {task.title}
+                </span>
+
+                {/* --- CONDITIONALLY HIDE BADGES FOR SUBTASKS --- */}
+                {!isSubtask && (
+                    <>
+                        <span className={`text-xs px-2 py-1 rounded-full ${categoryColors[task.category] || categoryColors['Other']}`}>
+                            {task.category}
+                        </span>
+                        {formattedDate && (
+                            <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
+                                {formattedDate}
+                            </span>
+                        )}
+                    </>
                 )}
+                {/* --------------------------------------------- */}
+            </div>
             <div className="flex gap-2 items-center">
                 {!isSubtask && (
                     <form action={chunkAndSaveTask}>

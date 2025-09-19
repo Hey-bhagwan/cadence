@@ -8,7 +8,8 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 
 export async function addTask(formData: FormData) {
     const title = formData.get('title');
-    const dueDate = formData.get('due_date'); // <-- Get the due date
+    const dueDate = formData.get('due_date');
+    const category = formData.get('category'); // <-- Get the category
 
     if (!title) return;
 
@@ -16,13 +17,18 @@ export async function addTask(formData: FormData) {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
-    const taskToInsert: { title: string; user_id: string; due_date?: string } = {
+    const taskToInsert: {
+        title: string;
+        user_id: string;
+        category: string; // <-- Add category to the type
+        due_date?: string;
+    } = {
         title: title.toString(),
         user_id: session.user.id,
+        category: category ? category.toString() : 'Other', // <-- Add the category value
     };
 
-    // Only add due_date if the user actually selected one
-    if (dueDate) {
+    if (dueDate && dueDate.toString().length > 0) {
         taskToInsert.due_date = dueDate.toString();
     }
 

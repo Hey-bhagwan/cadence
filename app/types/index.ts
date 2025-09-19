@@ -9,4 +9,5 @@ export interface Task {
     due_date: string | null;
     user_id: string;
     parent_id: number | null;
+    category: string;
   }
