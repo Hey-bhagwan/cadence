@@ -7,12 +7,24 @@ import { Task } from '../types'
 export default function TaskItem({ task }: { task: Task }) {
     // We don't want the AI button on subtasks
     const isSubtask = task.parent_id !== null;
+    // Helper to format the date nicely
+    const formattedDate = task.due_date 
+      ? new Date(task.due_date + 'T00:00:00').toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        }) 
+      : null;
 
     return (
         <div className="flex items-center justify-between p-4 bg-white border rounded-lg">
             <span className={`${task.is_completed ? 'line-through text-gray-500' : ''}`}>
                 {task.title}
             </span>
+            {formattedDate && (
+                    <span className="text-xs bg-gray-200 text-gray-600 px-2 py-1 rounded-full">
+                        {formattedDate}
+                    </span>
+                )}
             <div className="flex gap-2 items-center">
                 {!isSubtask && (
                     <form action={chunkAndSaveTask}>

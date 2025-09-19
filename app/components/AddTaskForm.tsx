@@ -21,6 +21,11 @@ export default function AddTaskForm() {
                 placeholder="What do you need to do?"
                 className="flex-grow p-2 border rounded"
             />
+            <input 
+                type="date"
+                name="due_date"
+                className="p-2 border rounded text-gray-500"
+            />
             <button type="submit" className="px-4 py-2 text-white bg-green-500 rounded">
                 Add Tasktask
             </button>
