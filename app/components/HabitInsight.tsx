@@ -22,7 +22,7 @@ export default async function HabitInsight() {
         .select('*')
         .eq('user_id', session.user.id)
         .eq('insight_type', 'peak_productivity_hour');
-        
+
     if (!insights || insights.length === 0) {
         return null; // Don't show anything if no insights are found
     }
@@ -33,7 +33,7 @@ export default async function HabitInsight() {
     return (
         <div className="p-4 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">
             <p>
-                💡 **Productivity Tip:** You complete most of your **'{insight.category}'** tasks around **{formatHour(insight.value)}**. Try scheduling them for that time!
+                💡 **Productivity Tip:** You complete most of your <strong>&apos;{insight.category}&apos;</strong> tasks around <strong>{formatHour(insight.value)}</strong>. Try scheduling them for that time!
             </p>
         </div>
     );
