@@ -5,6 +5,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import webPush from 'web-push';
 
 export async function addTask(formData: FormData) {
     const title = formData.get('title');
@@ -96,6 +97,56 @@ export async function chunkAndSaveTask(formData: FormData) {
 
     } catch (e) {
         console.error("Failed to parse AI response or save subtasks:", text, e);
-        // Optionally, return an error message to the user
+        throw e;
+    }
+}
+
+export async function saveSubscription(subscription: object) {
+    const supabase = createServerComponentClient({ cookies });
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        throw new Error("User not authenticated");
+    }
+
+    // Upsert ensures we don't have duplicate subscriptions for a user
+    const { error } = await supabase.from('push_subscriptions').upsert({
+        user_id: session.user.id,
+        subscription: subscription,
+    });
+
+    if (error) {
+        console.error("Error saving subscription:", error);
+        throw error;
+    }
+}
+
+export async function sendNudgeNotification(userId: string, message: string) {
+    const supabase = createServerComponentClient({ cookies });
+    
+    // 1. Get the user's saved subscription from the database
+    const { data, error } = await supabase
+        .from('push_subscriptions')
+        .select('subscription')
+        .eq('user_id', userId)
+        .single();
+
+    if (error || !data) {
+        console.error("No subscription found for user:", userId);
+        return;
+    }
+
+    // 2. Configure web-push with your VAPID keys
+    webPush.setVapidDetails(
+        'mailto:ayushupa29@gmail.com', // Replace with your email
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+        process.env.VAPID_PRIVATE_KEY!
+    );
+
+    // 3. Send the notification
+    try {
+        await webPush.sendNotification(data.subscription, message);
+        console.log('Push notification sent successfully to:', userId);
+    } catch (pushError) {
+        console.error('Error sending push notification:', pushError);
     }
 }

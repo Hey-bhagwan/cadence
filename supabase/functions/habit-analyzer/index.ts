@@ -12,11 +12,16 @@ Deno.serve(async (req) => {
   try {
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+      { // Add this options object
+        db: {
+          schema: 'public',
+        }
+      }
     )
 
     // 1. Get all users
-    const { data: users, error: usersError } = await supabaseAdmin.from('users').select('id').eq('role', 'authenticated_user');
+    const { data: { users }, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
     if (usersError) throw usersError;
 
     for (const user of users) {
@@ -43,7 +48,7 @@ Deno.serve(async (req) => {
 
       // 3. Analyze the data to find the peak hour for each category
       const completionsByHour: { [category: string]: { [hour: number]: number } } = {};
-      
+
       for (const task of tasks) {
         if (!task.completed_at || !task.category) continue;
 

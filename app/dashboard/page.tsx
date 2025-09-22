@@ -5,6 +5,8 @@ import { redirect } from 'next/navigation'
 import AddTaskForm from '../components/AddTaskForm'
 import ViewToggle from '../components/ViewToggle' // Import the new toggle
 import HabitInsight from '../components/HabitInsight'
+import SmartSuggestion from '../components/SmartSuggestion'
+import EnableNotificationsButton from '../components/EnableNotificationsButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -24,7 +26,9 @@ export default async function Dashboard() {
   return (
     <div className="p-8 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Your Tasks</h1>
+      <EnableNotificationsButton />
       <HabitInsight /> 
+      <SmartSuggestion />
       <AddTaskForm />
       <ViewToggle tasks={tasks || []} />
     </div>
