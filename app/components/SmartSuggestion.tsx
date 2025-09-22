@@ -1,6 +1,14 @@
 // components/SmartSuggestion.tsx
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
+'use client';
+
+// The Task Category enum we defined in the database
+type TaskCategory = 'Work' | 'Learning' | 'Personal' | 'Fitness' | 'Other';
+
+// The shape of our insight data
+interface Insight {
+    category: TaskCategory;
+    value: string; // The hour, e.g., '10'
+}
 
 function formatHour(hour: string) {
     const h = parseInt(hour, 10);
@@ -10,28 +18,23 @@ function formatHour(hour: string) {
     return `${h - 12} PM`;
 }
 
-export default async function SmartSuggestion() {
-    const supabase = createServerComponentClient({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return null;
-
-    // For this MVP, we'll just get the first insight we find
-    const { data: insights } = await supabase
-        .from('user_insights')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .eq('insight_type', 'peak_productivity_hour')
-        .limit(1);
-        
-    if (!insights || insights.length === 0) {
-        return null;
+// It now takes the currently selected category and all insights as props
+export default function SmartSuggestion({ selectedCategory, insights }: { selectedCategory: TaskCategory | null, insights: Insight[] }) {
+    if (!selectedCategory || insights.length === 0) {
+        return null; // Don't show anything if no category is selected
     }
-    const insight = insights[0];
+
+    // Find the specific insight for the selected category
+    const relevantInsight = insights.find(i => i.category === selectedCategory);
+
+    if (!relevantInsight) {
+        return null; // Don't show if we have no insight for this category yet
+    }
 
     return (
-        <div className="p-4 mb-6 bg-purple-50 border border-purple-200 rounded-lg text-purple-800">
+        <div className="p-4 mb-6 bg-purple-50 border border-purple-200 rounded-lg text-purple-800 animate-fade-in">
             <p>
-                🧠 **Smart Suggestion:** You&apos;re most productive with **&apos;{insight.category}&apos;** tasks around **{formatHour(insight.value)}**. Try adding a new task for that time to get into your flow state.
+                🧠 <strong>Smart Suggestion:</strong> You&apos;re great at **&apos;{relevantInsight.category}&apos;** tasks around **{formatHour(relevantInsight.value)}**. Consider scheduling this new task for then!
             </p>
         </div>
     );

@@ -46,7 +46,7 @@ export default function CalendarView({ tasks }: { tasks: Task[] }) {
     });
 
   return (
-    <div style={{ height: '70vh' }}> {/* Give the calendar a defined height */}
+    <div style={{ height: '70vh' }}>
       <Calendar
         localizer={localizer}
         events={events}

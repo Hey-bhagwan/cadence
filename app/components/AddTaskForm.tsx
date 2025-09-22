@@ -3,11 +3,12 @@
 
 import { addTask } from "@/app/actions";
 import { useRef } from "react";
+import { TaskCategory } from "../types";
 
 // The categories we defined in our database enum
-const categories = ['Work', 'Learning', 'Personal', 'Fitness', 'Other'];
+const categories: TaskCategory[]= ['Work', 'Learning', 'Personal', 'Fitness', 'Other'];
 
-export default function AddTaskForm() {
+export default function AddTaskForm({ onCategoryChange }: { onCategoryChange: (category: TaskCategory) => void }) {
     const ref = useRef<HTMLFormElement>(null);
     
     return (
@@ -30,7 +31,12 @@ export default function AddTaskForm() {
                 name="due_date"
                 className="p-2 border rounded text-gray-500"
             />
-            <select name="category" className="p-2 border rounded bg-white text-gray-500">
+            <select 
+                name="category" 
+                className="p-2 border rounded bg-white text-gray-500"
+                // The cast to TaskCategory tells TypeScript we know this value is valid
+                onChange={(e) => onCategoryChange(e.target.value as TaskCategory)}
+            >
                 {categories.map(cat => (
                     <option key={cat} value={cat}>{cat}</option>
                 ))}
