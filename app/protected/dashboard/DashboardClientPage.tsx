@@ -1,7 +1,7 @@
 // app/dashboard/DashboardClientPage.tsx
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Task, Insight, TaskCategory } from '../../types';
 
 import AddTaskForm from '../../components/AddTaskForm';
@@ -14,6 +14,15 @@ import { sendNudgeNotification } from '@/app/actions';
 // The component now receives tasks and insights as props
 export default function DashboardClientPage({ tasks, insights }: { tasks: Task[], insights: Insight[] }) {
     const [selectedCategory, setSelectedCategory] = useState<TaskCategory | null>(null);
+
+    useEffect(() => {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/worker.js')
+          .then((registration) => console.log('Service Worker registered with scope:', registration.scope))
+          .catch((err) => console.error('Service Worker registration failed:', err));
+          //hey
+      }
+    }, []);
 
     return (
         <div className="p-8 max-w-4xl mx-auto">
