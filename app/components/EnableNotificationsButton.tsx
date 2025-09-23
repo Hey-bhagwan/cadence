@@ -32,6 +32,7 @@ export default function EnableNotificationsButton() {
     }, []);
 
     const subscribeUser = async () => {
+        console.log('Requesting notification permission...');
         if ('serviceWorker' in navigator) {
             const registration = await navigator.serviceWorker.ready;
             const subscription = await registration.pushManager.subscribe({

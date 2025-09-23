@@ -1,6 +1,6 @@
 // app/dashboard/page.tsx
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import DashboardClientPage from './DashboardClientPage'
@@ -8,7 +8,9 @@ import DashboardClientPage from './DashboardClientPage'
 export const dynamic = 'force-dynamic'
 
 export default async function Dashboard() {
-  const supabase = createServerComponentClient({ cookies })
+  const cookieStore = cookies() // <-- Get the cookie store
+  const supabase = await createClient() // <-- Await the promise
+
   const { data: { session } } = await supabase.auth.getSession()
 
   if (!session) {

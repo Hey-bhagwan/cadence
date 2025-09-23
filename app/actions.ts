@@ -2,6 +2,7 @@
 'use server'
 
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -14,7 +15,7 @@ export async function addTask(formData: FormData) {
 
     if (!title) return;
 
-    const supabase = createServerComponentClient({ cookies });
+    const supabase = await createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) return;
 
@@ -38,13 +39,13 @@ export async function addTask(formData: FormData) {
 }
 
 export async function deleteTask(id: number) {
-    const supabase = createServerComponentClient({ cookies })
-    await supabase.from('tasks').delete().match({ id })
-    revalidatePath('/dashboard')
+    const supabase = await createClient();
+    await supabase.from('tasks').delete().match({ id });
+    revalidatePath('/dashboard');
 }
 
 export async function updateTaskStatus(id: number, is_completed: boolean) {
-    const supabase = createServerComponentClient({ cookies })
+    const supabase = await createClient();
 
     // If the task is being marked as complete, set the completed_at timestamp.
     // If it's being marked as incomplete, set it back to null.
@@ -82,7 +83,7 @@ export async function chunkAndSaveTask(formData: FormData) {
         const subtaskTitles: string[] = JSON.parse(cleanedText);
 
         // 2. Save Subtasks to Supabase
-        const supabase = createServerComponentClient({ cookies });
+        const supabase = await createClient();
         const { data: { session } } = await supabase.auth.getSession();
         if (!session) return;
 
@@ -102,7 +103,7 @@ export async function chunkAndSaveTask(formData: FormData) {
 }
 
 export async function saveSubscription(subscription: object) {
-    const supabase = createServerComponentClient({ cookies });
+    const supabase = await createClient();
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
         throw new Error("User not authenticated");
@@ -120,32 +121,37 @@ export async function saveSubscription(subscription: object) {
     }
 }
 
-export async function sendNudgeNotification(userId: string, message: string) {
-    const supabase = createServerComponentClient({ cookies });
+export async function sendNudgeNotification() {
+    const supabase = await createClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+        throw new Error("User not authenticated");
+    }
     
     // 1. Get the user's saved subscription from the database
     const { data, error } = await supabase
         .from('push_subscriptions')
         .select('subscription')
-        .eq('user_id', userId)
+        .eq('user_id', session.user.id)
         .single();
 
     if (error || !data) {
-        console.error("No subscription found for user:", userId);
+        console.error("No subscription found for user:", session.user.id);
         return;
     }
 
     // 2. Configure web-push with your VAPID keys
     webPush.setVapidDetails(
-        'mailto:ayushupa29@gmail.com', // Replace with your email
+        'mailto:ayushupa29@gmail.com', // Make sure you replaced this
         process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
         process.env.VAPID_PRIVATE_KEY!
     );
 
     // 3. Send the notification
     try {
+        const message = "🔔 This is a test nudge from Cadence!";
         await webPush.sendNotification(data.subscription, message);
-        console.log('Push notification sent successfully to:', userId);
+        console.log('Push notification sent successfully to:', session.user.id);
     } catch (pushError) {
         console.error('Error sending push notification:', pushError);
     }

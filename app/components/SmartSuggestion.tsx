@@ -34,7 +34,7 @@ export default function SmartSuggestion({ selectedCategory, insights }: { select
     return (
         <div className="p-4 mb-6 bg-purple-50 border border-purple-200 rounded-lg text-purple-800 animate-fade-in">
             <p>
-                🧠 <strong>Smart Suggestion:</strong> You&apos;re great at **&apos;{relevantInsight.category}&apos;** tasks around **{formatHour(relevantInsight.value)}**. Consider scheduling this new task for then!
+                🧠 <strong>Smart Suggestion:</strong> You&apos;re great at <strong>&apos;{relevantInsight.category}&apos;</strong> tasks around <strong>{formatHour(relevantInsight.value)}</strong>. Consider scheduling this new task for then!
             </p>
         </div>
     );
