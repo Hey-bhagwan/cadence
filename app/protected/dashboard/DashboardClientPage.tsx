@@ -28,12 +28,14 @@ export default function DashboardClientPage({ tasks, insights }: { tasks: Task[]
         <div className="p-8 max-w-4xl mx-auto">
             <div className="flex justify-end gap-2">
                 <EnableNotificationsButton />
-                <button 
-                  onClick={async () => await sendNudgeNotification()}
-                  className="px-4 py-2 text-sm bg-blue-500 text-white rounded"
-                >
-                  Send Test Nudge
-                </button>
+                <form action={sendNudgeNotification}>
+                  <button 
+                    type="submit"
+                    className="px-4 py-2 text-sm bg-blue-500 text-white rounded"
+                  >
+                    Send Test Nudge
+                  </button>
+                </form>
             </div>
             <h1 className="text-3xl font-bold mb-6">Your Tasks</h1>
             
