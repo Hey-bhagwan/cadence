@@ -121,22 +121,18 @@ export async function saveSubscription(subscription: object) {
     }
 }
 
-export async function sendNudgeNotification() {
+export async function sendNudgeNotification(userId: string, title: string, body: string) {
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-        throw new Error("User not authenticated");
-    }
     
     // 1. Get the user's saved subscription from the database
     const { data, error } = await supabase
         .from('push_subscriptions')
         .select('subscription')
-        .eq('user_id', session.user.id)
+        .eq('user_id', userId)
         .single();
 
     if (error || !data) {
-        console.error("No subscription found for user:", session.user.id);
+        console.error("No subscription found for user:", userId);
         return;
     }
 
@@ -149,9 +145,13 @@ export async function sendNudgeNotification() {
 
     // 3. Send the notification
     try {
-        const message = "🔔 This is a test nudge from Cadence!";
-        await webPush.sendNotification(data.subscription, message);
-        console.log('Push notification sent successfully to:', session.user.id);
+        const payload = JSON.stringify({ 
+            title, 
+            body
+        });
+
+        await webPush.sendNotification(data.subscription, payload);
+        console.log('Push notification sent successfully to:', userId);
     } catch (pushError) {
         console.error('Error sending push notification:', pushError);
     }
