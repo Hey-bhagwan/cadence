@@ -9,7 +9,6 @@ import ViewToggle from '../../components/ViewToggle';
 import HabitInsight from '../../components/HabitInsight';
 import SmartSuggestion from '../../components/SmartSuggestion';
 import EnableNotificationsButton from '../../components/EnableNotificationsButton';
-import { sendNudgeNotification } from '@/app/actions';
 
 // The component now receives tasks and insights as props
 export default function DashboardClientPage({ tasks, insights }: { tasks: Task[], insights: Insight[] }) {

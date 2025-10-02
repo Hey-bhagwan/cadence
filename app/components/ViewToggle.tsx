@@ -2,7 +2,7 @@
 'use client'
 
 import { useState } from 'react'
-import TaskList from './TaskList' // We will create this next
+import TaskList from './TaskList'
 import CalendarView from './CalendarView'
 import { Task } from '../types'
 
@@ -16,7 +16,7 @@ export default function ViewToggle({ tasks }: { tasks: Task[] }) {
                     onClick={() => setView('list')}
                     className={`px-4 py-2 text-sm rounded ${view === 'list' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                 >
-                    List
+                    Grid
                 </button>
                 <button 
                     onClick={() => setView('calendar')}

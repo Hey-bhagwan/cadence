@@ -1,10 +1,8 @@
 // app/actions.ts
 'use server'
 
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import webPush from 'web-push';
 
@@ -31,7 +29,7 @@ export async function addTask(formData: FormData) {
     };
 
     if (dueDate && dueDate.toString().length > 0) {
-        taskToInsert.due_date = dueDate.toString();
+        taskToInsert.due_date = `${dueDate.toString()}T00:00:00Z`;
     }
 
     await supabase.from('tasks').insert(taskToInsert);
@@ -66,7 +64,7 @@ export async function chunkAndSaveTask(formData: FormData) {
 
     // 1. Call Gemini API
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const prompt = `
       You are a productivity assistant. Break down the following complex task 
       into a list of 2-4 simple, actionable subtasks.
@@ -123,7 +121,7 @@ export async function saveSubscription(subscription: object) {
 
 export async function sendNudgeNotification(userId: string, title: string, body: string) {
     const supabase = await createClient();
-    
+
     // 1. Get the user's saved subscription from the database
     const { data, error } = await supabase
         .from('push_subscriptions')
@@ -145,8 +143,8 @@ export async function sendNudgeNotification(userId: string, title: string, body:
 
     // 3. Send the notification
     try {
-        const payload = JSON.stringify({ 
-            title, 
+        const payload = JSON.stringify({
+            title,
             body
         });
 
@@ -155,4 +153,23 @@ export async function sendNudgeNotification(userId: string, title: string, body:
     } catch (pushError) {
         console.error('Error sending push notification:', pushError);
     }
+}
+
+export async function updateTask(
+    { id, title, description, dueDate }:
+        { id: number; title: string; description: string; dueDate: string; }
+) {
+    const supabase = await createClient();
+
+    const taskToUpdate: { title: string; description: string; due_date?: string; } = {
+        title,
+        description,
+    };
+
+    if (dueDate) {
+        taskToUpdate.due_date = `${dueDate}T00:00:00Z`;
+    }
+
+    await supabase.from('tasks').update(taskToUpdate).eq('id', id);
+    revalidatePath('/protected/dashboard');
 }
