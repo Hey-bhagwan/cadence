@@ -6,7 +6,7 @@ import { corsHeaders } from '../_shared/cors.ts'
 Deno.serve(async (req) => {
   // This is needed for the function to be invoked from the browser.
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
