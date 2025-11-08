@@ -4,37 +4,47 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { redirect } from "next/navigation";
 import webPush from 'web-push';
+import Spinner from '../app/components/Spinner';
 
 export async function addTask(formData: FormData) {
-    const title = formData.get('title');
-    const dueDate = formData.get('due_date');
-    const category = formData.get('category'); // <-- Get the category
-
-    if (!title) return;
-
     const supabase = await createClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
 
-    const taskToInsert: {
-        title: string;
-        user_id: string;
-        category: string; // <-- Add category to the type
-        due_date?: string;
-    } = {
-        title: title.toString(),
-        user_id: session.user.id,
-        category: category ? category.toString() : 'Other', // <-- Add the category value
-    };
-
-    if (dueDate && dueDate.toString().length > 0) {
-        taskToInsert.due_date = `${dueDate.toString()}T00:00:00Z`;
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        return redirect('/auth/login');
     }
 
-    await supabase.from('tasks').insert(taskToInsert);
+    // 1. Get all form fields, including the new description
+    const title = formData.get('title') as string;
+    const description = formData.get('description') as string | null;
+    const due_date = formData.get('due_date') as string | null;
+    const category = formData.get('category') as string;
+
+    if (!title || title.trim() === '') {
+        return { error: 'Task title cannot be empty.' };
+    }
+
+    // 2. Insert the new task object, now with the description
+    const { error } = await supabase.from('tasks').insert({
+        title: title.trim(),
+        description: description?.trim() || null, // Add description, ensuring empty strings become null
+        due_date: due_date || null, // Pass date directly, Supabase handles it
+        category,
+        user_id: user.id,
+    });
+
+    // 3. Add robust error handling
+    if (error) {
+        console.error('Supabase insert error:', error);
+        return { error: 'Failed to add the task. Please try again.' };
+    }
+
+    // If successful, revalidate the path to show the new task instantly
     revalidatePath('/dashboard');
 }
+
 
 export async function deleteTask(id: number) {
     const supabase = await createClient();

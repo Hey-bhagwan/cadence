@@ -1,27 +1,24 @@
-// components/HabitInsight.tsx
 import { Insight } from '../types';
 
-// Helper function to format the hour
 function formatHour(hour: string) {
-    const h = parseInt(hour, 10);
-    if (h === 0) return "12 AM";
-    if (h === 12) return "12 PM";
-    if (h < 12) return `${h} AM`;
-    return `${h - 12} PM`;
+  const h = parseInt(hour, 10);
+  if (h === 0) return "12 AM";
+  if (h === 12) return "12 PM";
+  if (h < 12) return `${h} AM`;
+  return `${h - 12} PM`;
 }
 
 export default function HabitInsight({ insights }: { insights: Insight[] }) {
-    if (!insights || insights.length === 0) {
-        return null;
-    }
+  if (!insights || insights.length === 0) return null;
+  const insight = insights[0];
 
-    const insight = insights[0];
-
-    return (
-        <div className="p-4 mb-6 bg-blue-50 border border-blue-200 rounded-lg text-blue-800">
-            <p>
-                💡 <strong>Productivity Tip:</strong> You complete most of your <strong>&apos;{insight.category}&apos;</strong> tasks around <strong>{formatHour(insight.value)}</strong>. Try scheduling them for that time!
-            </p>
-        </div>
-    );
+  return (
+    <div>
+      <h3 className="text-lg font-semibold mb-2">Your Productivity Pattern</h3>
+      <p className="text-gray-700 text-sm">
+        You complete most of your <strong className="text-[#4FD1C5]">'{insight.category}'</strong> tasks around{" "}
+        <strong className="text-[#4FD1C5]">{formatHour(insight.value)}</strong>. Schedule your next session for this time!
+      </p>
+    </div>
+  );
 }
