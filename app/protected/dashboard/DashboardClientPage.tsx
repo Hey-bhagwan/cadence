@@ -10,7 +10,7 @@ import EnableNotificationsButton from '../../components/EnableNotificationsButto
 import { User, ChevronDown } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@/lib/supabase/client';
 
 
 export default function DashboardClientPage({ tasks, insights }: { tasks: Task[], insights: Insight[] }) {
@@ -29,8 +29,8 @@ export default function DashboardClientPage({ tasks, insights }: { tasks: Task[]
   }, []);
 
   const handleLogout = async () => {
+    const supabase = createClient()
     try {
-      const supabase = await createClient()
       await supabase.auth.signOut()
       router.push('/auth/login')
     } catch (error) {

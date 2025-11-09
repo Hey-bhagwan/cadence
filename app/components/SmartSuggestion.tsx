@@ -32,8 +32,8 @@ export default function SmartSuggestion({
     <div>
       <h3 className="text-lg font-semibold mb-2">AI Suggestion</h3>
       <p className="text-gray-700 text-sm">
-        It’s a great time to focus on{" "}
-        <strong className="text-[#4FD1C5]">'{relevantInsight.category}'</strong> tasks around{" "}
+        It&apos;s a great time to focus on{" "}
+        <strong className="text-[#4FD1C5]">&apos;{relevantInsight.category}&apos;</strong> tasks around{" "}
         <strong className="text-[#4FD1C5]">{formatHour(relevantInsight.value)}</strong>.
       </p>
     </div>
