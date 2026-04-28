@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { User, ChevronDown, Search, Bell, Menu, LayoutDashboard, CheckSquare, Calendar, Target, Settings, Sparkles, X, Brain } from 'lucide-react';
+import { User, ChevronDown, Search, Bell, Menu, LayoutDashboard, CheckSquare, Calendar, Target, Settings, Sparkles, X, Brain, Repeat } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import EnableNotificationsButton from '../components/EnableNotificationsButton';
 import { createClient } from '@/lib/supabase/client';
@@ -59,9 +59,7 @@ export default function ProtectedLayout({
 
   const navItems = [
     { name: 'Dashboard', href: '/protected/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'Tasks', href: '/protected/tasks', icon: <CheckSquare size={20} /> },
-    { name: 'Planner', href: '/protected/planner', icon: <Calendar size={20} /> },
-    { name: 'Goals', href: '/protected/goals', icon: <Target size={20} /> },
+    { name: 'Habits', href: '/protected/habits', icon: <Repeat size={20} /> },
     { name: 'Settings', href: '/protected/settings', icon: <Settings size={20} /> },
   ];
 
@@ -147,7 +145,7 @@ export default function ProtectedLayout({
               <Search className="w-4 h-4 text-slate-500 mr-2 shrink-0" />
               <input 
                 type="text" 
-                placeholder="Search tasks, goals..." 
+                placeholder="Search habits..." 
                 className="bg-transparent border-none outline-none text-sm text-white w-full placeholder:text-slate-500"
               />
             </div>
