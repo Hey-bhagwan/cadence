@@ -24,7 +24,7 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
         show: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.05
+                // Stagger moved to individual items
             }
         }
     };
@@ -37,10 +37,10 @@ export default function TaskList({ tasks }: { tasks: Task[] }) {
             className="grid gap-5 md:grid-cols-2 xl:grid-cols-3"
         >
             <AnimatePresence mode="popLayout">
-                {sortedTasks.map((parentTask) => {
+                {sortedTasks.map((parentTask, index) => {
                     const subtasks = tasks.filter(task => task.parent_id === parentTask.id);
                     return (
-                        <TaskItem key={parentTask.id} task={parentTask} subtasks={subtasks} />
+                        <TaskItem key={parentTask.id} task={parentTask} subtasks={subtasks} index={index} />
                     );
                 })}
             </AnimatePresence>

@@ -119,16 +119,7 @@ export default function ProtectedLayout({
                 })}
               </div>
 
-              <div className="p-4 border-t border-white/5">
-                <div className="glass-card p-4 rounded-xl flex flex-col gap-2 relative overflow-hidden group hover:border-[#4f46e5]/30 transition-colors">
-                  <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40 transition-opacity">
-                    <Brain className="w-12 h-12 text-[#7c3aed]" />
-                  </div>
-                  <Sparkles className="w-5 h-5 text-[#7c3aed]" />
-                  <p className="text-sm font-medium text-white relative z-10">Pro Plan</p>
-                  <p className="text-xs text-slate-400 relative z-10">Get full AI capabilities.</p>
-                </div>
-              </div>
+
             </motion.aside>
           </>
         )}

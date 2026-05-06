@@ -42,14 +42,14 @@ export async function addTask(formData: FormData) {
     }
 
     // If successful, revalidate the path to show the new task instantly
-    revalidatePath('/dashboard');
+    revalidatePath('/protected/dashboard');
 }
 
 
 export async function deleteTask(id: number) {
     const supabase = await createClient();
     await supabase.from('tasks').delete().match({ id });
-    revalidatePath('/dashboard');
+    revalidatePath('/protected/dashboard');
 }
 
 export async function updateTaskStatus(id: number, is_completed: boolean) {
@@ -63,7 +63,7 @@ export async function updateTaskStatus(id: number, is_completed: boolean) {
     };
 
     await supabase.from('tasks').update(updates).match({ id })
-    revalidatePath('/dashboard')
+    revalidatePath('/protected/dashboard');
 }
 
 export async function chunkAndSaveTask(formData: FormData) {
@@ -102,7 +102,7 @@ export async function chunkAndSaveTask(formData: FormData) {
         }));
 
         await supabase.from('tasks').insert(subtasksToInsert);
-        revalidatePath('/dashboard');
+        revalidatePath('/protected/dashboard');
 
     } catch (e) {
         console.error("Failed to parse AI response or save subtasks:", text, e);

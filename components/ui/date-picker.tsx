@@ -20,8 +20,10 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ date, setDate }: DatePickerProps) {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
@@ -34,11 +36,14 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0 z-[9999]">
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={(selectedDate) => {
+            setDate(selectedDate);
+            setIsOpen(false);
+          }}
           autoFocus
         />
       </PopoverContent>

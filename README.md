@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Cadence
 
-## Getting Started
+> **Stop Planning. Start Executing.**
 
-First, run the development server:
+Cadence is an intelligent, AI-powered planner designed to help you turn complex projects into simple, actionable steps. Break through procrastination with AI-driven workflows and build lasting habits with zero friction.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ✨ Key Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **🧠 AI Task Breakdown:** Automatically dissects massive projects into bite-sized, achievable micro-tasks so you never feel overwhelmed again.
+- **📈 Habit Intelligence:** Learns your peak performance hours over time and automatically suggests scheduling high-focus tasks when you're most alert.
+- **🔔 Contextual Nudges:** Smart notifications that gently guide you to act precisely at the right moment, avoiding meaningless calendar clutter.
+- **🔐 Secure Authentication:** Powered by Supabase for a seamless and secure login experience.
+- **📊 Analytics Dashboard:** Track your productivity and habit streaks with interactive charts.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router)
+- **Frontend:** React 19, [Tailwind CSS 4](https://tailwindcss.com/), [Framer Motion](https://www.framer.com/motion/)
+- **UI Components:** [Radix UI](https://www.radix-ui.com/), [Lucide React](https://lucide.dev/)
+- **Database & Auth:** [Supabase](https://supabase.com/)
+- **Charts:** [Recharts](https://recharts.org/)
+- **Calendar Elements:** React Big Calendar, React Day Picker
+- **AI Integration:** Google Generative AI
 
-## Learn More
+## 🚀 Getting Started
 
-To learn more about Next.js, take a look at the following resources:
+Follow these steps to set up the project locally.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node.js (v18 or higher)
+- npm, yarn, pnpm, or bun
 
-## Deploy on Vercel
+### Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Clone the repository**
+   ```bash
+   git clone <your-repo-url>
+   cd cadence
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up Environment Variables**
+   Create a `.env.local` file in the root directory and add your required credentials:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   # Add any other required environment variables (e.g., AI provider keys)
+   ```
+
+4. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Open the app**
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser to see the result.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.

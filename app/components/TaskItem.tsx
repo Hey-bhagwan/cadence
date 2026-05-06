@@ -52,7 +52,7 @@ function CompleteCheckbox({ isCompleted }: { isCompleted: boolean }) {
   );
 }
 
-export default function TaskItem({ task, subtasks }: { task: Task, subtasks: Task[] }) {
+export default function TaskItem({ task, subtasks, index = 0 }: { task: Task, subtasks: Task[], index?: number }) {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
 
@@ -65,7 +65,7 @@ export default function TaskItem({ task, subtasks }: { task: Task, subtasks: Tas
 
     const itemVariant = {
         hidden: { opacity: 0, y: 20 },
-        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
+        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24, delay: index * 0.05 } },
         exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
     };
 
@@ -74,6 +74,9 @@ export default function TaskItem({ task, subtasks }: { task: Task, subtasks: Tas
         <motion.div 
           layout
           variants={itemVariant}
+          initial="hidden"
+          animate="show"
+          exit="exit"
           className={`group bg-[#0f172a]/80 backdrop-blur-md border ${isCompleted ? 'border-slate-800/50 bg-slate-900/40' : 'border-slate-700/50 hover:border-indigo-500/50'} rounded-2xl transition-all duration-300 flex flex-col relative overflow-hidden shadow-lg hover:shadow-indigo-500/10`}
         >
             <div className="p-5 flex flex-col h-full gap-4">
