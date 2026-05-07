@@ -6,7 +6,7 @@ import { deleteTask, updateTaskStatus, chunkAndSaveTask } from "@/app/actions";
 import { Task } from "../types";
 import { Pencil, Calendar, Sparkles, CheckCircle2, Circle, Trash2, AlignLeft } from 'lucide-react';
 import EditTaskModel from './EditTaskModal';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 function Spinner({ className }: { className?: string }) {
@@ -63,7 +63,7 @@ export default function TaskItem({ task, subtasks, index = 0 }: { task: Task, su
     const hasDetails = (task.description && task.description.length > 0) || subtasks.length > 0;
     const isCompleted = task.is_completed;
 
-    const itemVariant = {
+    const itemVariant: Variants = {
         hidden: { opacity: 0, y: 20 },
         show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24, delay: index * 0.05 } },
         exit: { opacity: 0, scale: 0.9, transition: { duration: 0.2 } }
